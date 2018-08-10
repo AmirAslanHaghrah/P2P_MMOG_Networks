@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "P2P_MMOG_Networks", "P2P_MMOG_Networks\P2P_MMOG_Networks.vcxproj", "{CC08499E-FB15-4012-BBD9-4999C84BC76D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "P2P_MMOG_Network_Server", "P2P_MMOG_Network_Server\P2P_MMOG_Network_Server.vcxproj", "{CF40BCBA-0012-47A8-9833-6FBDB1185E18}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "P2P_MMOG_Network_Client", "P2P_MMOG_Network_Client\P2P_MMOG_Network_Client.vcxproj", "{D1F0996F-54E6-482F-8794-C18B458AEB43}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC08499E-FB15-4012-BBD9-4999C84BC76D}.Debug|x64.ActiveCfg = Debug|x64
+		{CC08499E-FB15-4012-BBD9-4999C84BC76D}.Debug|x64.Build.0 = Debug|x64
+		{CC08499E-FB15-4012-BBD9-4999C84BC76D}.Debug|x86.ActiveCfg = Debug|Win32
+		{CC08499E-FB15-4012-BBD9-4999C84BC76D}.Debug|x86.Build.0 = Debug|Win32
+		{CC08499E-FB15-4012-BBD9-4999C84BC76D}.Release|x64.ActiveCfg = Release|x64
+		{CC08499E-FB15-4012-BBD9-4999C84BC76D}.Release|x64.Build.0 = Release|x64
+		{CC08499E-FB15-4012-BBD9-4999C84BC76D}.Release|x86.ActiveCfg = Release|Win32
+		{CC08499E-FB15-4012-BBD9-4999C84BC76D}.Release|x86.Build.0 = Release|Win32
+		{CF40BCBA-0012-47A8-9833-6FBDB1185E18}.Debug|x64.ActiveCfg = Debug|x64
+		{CF40BCBA-0012-47A8-9833-6FBDB1185E18}.Debug|x64.Build.0 = Debug|x64
+		{CF40BCBA-0012-47A8-9833-6FBDB1185E18}.Debug|x86.ActiveCfg = Debug|Win32
+		{CF40BCBA-0012-47A8-9833-6FBDB1185E18}.Debug|x86.Build.0 = Debug|Win32
+		{CF40BCBA-0012-47A8-9833-6FBDB1185E18}.Release|x64.ActiveCfg = Release|x64
+		{CF40BCBA-0012-47A8-9833-6FBDB1185E18}.Release|x64.Build.0 = Release|x64
+		{CF40BCBA-0012-47A8-9833-6FBDB1185E18}.Release|x86.ActiveCfg = Release|Win32
+		{CF40BCBA-0012-47A8-9833-6FBDB1185E18}.Release|x86.Build.0 = Release|Win32
+		{D1F0996F-54E6-482F-8794-C18B458AEB43}.Debug|x64.ActiveCfg = Debug|x64
+		{D1F0996F-54E6-482F-8794-C18B458AEB43}.Debug|x64.Build.0 = Debug|x64
+		{D1F0996F-54E6-482F-8794-C18B458AEB43}.Debug|x86.ActiveCfg = Debug|Win32
+		{D1F0996F-54E6-482F-8794-C18B458AEB43}.Debug|x86.Build.0 = Debug|Win32
+		{D1F0996F-54E6-482F-8794-C18B458AEB43}.Release|x64.ActiveCfg = Release|x64
+		{D1F0996F-54E6-482F-8794-C18B458AEB43}.Release|x64.Build.0 = Release|x64
+		{D1F0996F-54E6-482F-8794-C18B458AEB43}.Release|x86.ActiveCfg = Release|Win32
+		{D1F0996F-54E6-482F-8794-C18B458AEB43}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E646C085-4207-48CC-9999-C3B78DF54C90}
+	EndGlobalSection
+EndGlobal
