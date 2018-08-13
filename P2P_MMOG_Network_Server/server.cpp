@@ -1,12 +1,14 @@
 #undef UNICODE
 
 #define WIN32_LEAN_AND_MEAN
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -79,15 +81,43 @@ int __cdecl main(void)
 		WSACleanup();
 		return 1;
 	}
+	
+	int i = 0;
+	while (i < 2) {
+		// Accept a client socket
+		struct sockaddr_in client_addr;
+		int clen = sizeof(client_addr);
+		ClientSocket = accept(ListenSocket, (struct sockaddr *)&client_addr, &clen);
 
-	// Accept a client socket
-	ClientSocket = accept(ListenSocket, NULL, NULL);
-	if (ClientSocket == INVALID_SOCKET) {
-		printf("accept failed with error: %d\n", WSAGetLastError());
-		closesocket(ListenSocket);
-		WSACleanup();
-		return 1;
+		if (ClientSocket == INVALID_SOCKET) {
+			printf("accept failed with error: %d\n", WSAGetLastError());
+			closesocket(ListenSocket);
+			WSACleanup();
+			return 1;
+		}
+
+		printf("IP address is: %s\n", inet_ntoa(client_addr.sin_addr));
+		printf("port is: %d\n", (int)ntohs(client_addr.sin_port));
+
+		i++;
 	}
+
+
+	//struct sockaddr_in* pV4Addr = (struct sockaddr_in*)&client_addr;
+	//struct in_addr ipAddr = pV4Addr->sin_addr;
+
+	//std::cout << ipAddr.S_un.S_addr << std::endl << std::endl;
+	//std::cout << (int)ipAddr.S_un.S_un_b.s_b1 << std::endl;
+	//std::cout << (int)ipAddr.S_un.S_un_b.s_b2 << std::endl;
+	//std::cout << (int)ipAddr.S_un.S_un_b.s_b3 << std::endl;
+	//std::cout << (int)ipAddr.S_un.S_un_b.s_b4 << std::endl << std::endl;
+	//std::cout << ipAddr.S_un.S_un_w.s_w1 << std::endl;
+	//std::cout << ipAddr.S_un.S_un_w.s_w2 << std::endl;
+
+	//char strip[INET_ADDRSTRLEN];
+	//inet_ntop(AF_INET, &ipAddr, strip, INET_ADDRSTRLEN);
+	//std::cout << strip << std::endl;
+
 
 	// No longer need server socket
 	closesocket(ListenSocket);
@@ -100,8 +130,8 @@ int __cdecl main(void)
 			printf("Bytes received: %d\n", iResult);
 
 			// Echo the buffer back to the sender
-			iSendResult = send(ClientSocket, recvbuf, iResult, 0);			
-			printf("Received bytes: %s", recvbuf);
+			iSendResult = send(ClientSocket, recvbuf, iResult, 0);	
+			printf("Received bytes: %.*s\n", iResult, recvbuf);
 
 			if (iSendResult == SOCKET_ERROR) {
 				printf("send failed with error: %d\n", WSAGetLastError());
