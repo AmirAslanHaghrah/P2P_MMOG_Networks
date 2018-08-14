@@ -10,12 +10,18 @@
 #include <stdio.h>
 #include <iostream>
 
+
+#include <thread>         // std::thread
+
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 // #pragma comment (lib, "Mswsock.lib")
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "13690"
+#define Clients 2
+
+int test(SOCKET ClientSocket, struct sockaddr_in client_addr);
 
 int __cdecl main(void)
 {
@@ -83,7 +89,9 @@ int __cdecl main(void)
 	}
 	
 	int i = 0;
-	while (i < 2) {
+	std::thread t[Clients];
+
+	while (i < Clients) {
 		// Accept a client socket
 		struct sockaddr_in client_addr;
 		int clen = sizeof(client_addr);
@@ -96,8 +104,12 @@ int __cdecl main(void)
 			return 1;
 		}
 
-		printf("IP address is: %s\n", inet_ntoa(client_addr.sin_addr));
-		printf("port is: %d\n", (int)ntohs(client_addr.sin_port));
+		
+		printf("IP: %s\t", inet_ntoa(client_addr.sin_addr));
+		printf("port: %d", (int)ntohs(client_addr.sin_port));
+		printf("\t Join!!!\n");
+
+		t[i] = std::thread(test, ClientSocket, client_addr);
 
 		i++;
 	}
@@ -119,18 +131,79 @@ int __cdecl main(void)
 	//std::cout << strip << std::endl;
 
 
-	// No longer need server socket
-	closesocket(ListenSocket);
+	//// No longer need server socket
+	//closesocket(ListenSocket);
+
+	//// Receive until the peer shuts down the connection
+	//do {
+
+	//	iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+	//	if (iResult > 0) {
+	//		printf("Bytes received: %d\n", iResult);
+
+	//		// Echo the buffer back to the sender
+	//		iSendResult = send(ClientSocket, recvbuf, iResult, 0);
+	//		printf("Received bytes: %.*s\n", iResult, recvbuf);
+
+	//		if (iSendResult == SOCKET_ERROR) {
+	//			printf("send failed with error: %d\n", WSAGetLastError());
+	//			closesocket(ClientSocket);
+	//			WSACleanup();
+	//			return 1;
+	//		}
+	//		printf("Bytes sent: %d\n", iSendResult);
+	//	}
+	//	else if (iResult == 0)
+	//		printf("Connection closing...\n");
+	//	else {
+	//		printf("recv failed with error: %d\n", WSAGetLastError());
+	//		closesocket(ClientSocket);
+	//		WSACleanup();
+	//		return 1;
+	//	}
+
+	//} while (iResult > 0);
+
+	//// shutdown the connection since we're done
+	//iResult = shutdown(ClientSocket, SD_SEND);
+	//if (iResult == SOCKET_ERROR) {
+	//	printf("shutdown failed with error: %d\n", WSAGetLastError());
+	//	closesocket(ClientSocket);
+	//	WSACleanup();
+	//	return 1;
+	//}
+
+	//// cleanup
+	//closesocket(ClientSocket);
+	//WSACleanup();
+
+	for (int i = 0; i < Clients; i++) {
+		t[i].join();
+	}
+
+	return 0;
+}
+
+
+int test(SOCKET ClientSocket, struct sockaddr_in client_addr) {
+	int iResult;
+	int iSendResult;
+	char recvbuf[DEFAULT_BUFLEN];
+	int recvbuflen = DEFAULT_BUFLEN;
+
+	//printf("IP address is: %s\n", inet_ntoa(client_addr.sin_addr));
+	//printf("port is: %d\n", (int)ntohs(client_addr.sin_port));
 
 	// Receive until the peer shuts down the connection
 	do {
-
 		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
 		if (iResult > 0) {
-			printf("Bytes received: %d\n", iResult);
+			//printf("%s\t%d\tBytes received: %d\n", inet_ntoa(client_addr.sin_addr), (int)ntohs(client_addr.sin_port), iResult);
+			printf("%s\t%d\:\n", inet_ntoa(client_addr.sin_addr), (int)ntohs(client_addr.sin_port));
+			//printf("Bytes received: %d\n", iResult);
 
 			// Echo the buffer back to the sender
-			iSendResult = send(ClientSocket, recvbuf, iResult, 0);	
+			iSendResult = send(ClientSocket, recvbuf, iResult, 0);
 			printf("Received bytes: %.*s\n", iResult, recvbuf);
 
 			if (iSendResult == SOCKET_ERROR) {
@@ -139,7 +212,7 @@ int __cdecl main(void)
 				WSACleanup();
 				return 1;
 			}
-			printf("Bytes sent: %d\n", iSendResult);
+			//printf("Bytes sent: %d\n", iSendResult);
 		}
 		else if (iResult == 0)
 			printf("Connection closing...\n");
@@ -149,7 +222,6 @@ int __cdecl main(void)
 			WSACleanup();
 			return 1;
 		}
-
 	} while (iResult > 0);
 
 	// shutdown the connection since we're done
@@ -164,6 +236,4 @@ int __cdecl main(void)
 	// cleanup
 	closesocket(ClientSocket);
 	WSACleanup();
-
-	return 0;
 }

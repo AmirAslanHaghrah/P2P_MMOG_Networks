@@ -50,15 +50,16 @@ int main()
 	int k;
 
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	cout << 0 << " I want to be nice today!" << endl;
 
 	// you can loop k higher to see more color choices
-	for (k = 1; k < 255; k++)
+	for (k = 1; k < 16; k++)
 	{
 		// pick the colorattribute k you want
 		SetConsoleTextAttribute(hConsole, k);
 		cout << k << " I want to be nice today!" << endl;
 	}
 
-	cin.get(); // wait
+	system("pause");
 	return 0;
 }
