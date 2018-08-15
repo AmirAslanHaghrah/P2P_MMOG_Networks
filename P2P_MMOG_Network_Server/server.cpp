@@ -18,7 +18,7 @@
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "13690"
-#define Clients 10
+#define Clients 10					// Number of Clients
 
 int test(SOCKET ClientSocket, struct sockaddr_in client_addr);
 
