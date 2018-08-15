@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <iostream>
 
-
 #include <thread>         // std::thread
 
 // Need to link with Ws2_32.lib
@@ -19,7 +18,7 @@
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "13690"
-#define Clients 2
+#define Clients 10
 
 int test(SOCKET ClientSocket, struct sockaddr_in client_addr);
 
@@ -180,7 +179,8 @@ int __cdecl main(void)
 	for (int i = 0; i < Clients; i++) {
 		t[i].join();
 	}
-
+	WSACleanup();
+	system("pause");
 	return 0;
 }
 
@@ -235,5 +235,4 @@ int test(SOCKET ClientSocket, struct sockaddr_in client_addr) {
 
 	// cleanup
 	closesocket(ClientSocket);
-	WSACleanup();
 }
