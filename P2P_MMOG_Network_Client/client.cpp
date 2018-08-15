@@ -99,8 +99,6 @@ int __cdecl main(int argc, char **argv)
 
 	printf("Bytes Sent: %ld\n", iResult);
 
-	
-
 	// shutdown the connection since no more data will be sent
 	iResult = shutdown(ConnectSocket, SD_SEND);
 	if (iResult == SOCKET_ERROR) {
