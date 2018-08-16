@@ -47,7 +47,7 @@ int __cdecl main(void)
 	ZeroMemory(&hints, sizeof(hints));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_protocol = IPPROTO_TCP;
+	hints.ai_protocol = IPPROTO_TCP | IPPROTO_UDP;
 	hints.ai_flags = AI_PASSIVE;
 
 	// Resolve the server address and port
@@ -107,6 +107,7 @@ int __cdecl main(void)
 		printf("IP: %s\t", inet_ntoa(client_addr.sin_addr));
 		printf("port: %d", (int)ntohs(client_addr.sin_port));
 		printf("\t Join!!!\n");
+		iSendResult = send(ClientSocket, (char*)(int)ntohs(client_addr.sin_port), 4, 0);
 
 		t[i] = std::thread(test, ClientSocket, client_addr);
 
@@ -203,7 +204,7 @@ int test(SOCKET ClientSocket, struct sockaddr_in client_addr) {
 			//printf("Bytes received: %d\n", iResult);
 
 			// Echo the buffer back to the sender
-			iSendResult = send(ClientSocket, recvbuf, iResult, 0);
+			iSendResult = send(ClientSocket, recvbuf, iResult, 0);			
 			printf("Received bytes: %.*s\n", iResult, recvbuf);
 
 			if (iSendResult == SOCKET_ERROR) {

@@ -39,27 +39,129 @@
 // light red on yellow would be 12 + 14*16 = 236
 // a Dev-C++ tested console application by  vegaseat  07nov2004
 
+//#include <iostream>
+//#include <windows.h>   // WinApi header
+//
+//using namespace std;    // std::cout, std::cin
+//
+//int main()
+//{
+//	HANDLE  hConsole;
+//	int k;
+//
+//	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+//	cout << 0 << " I want to be nice today!" << endl;
+//
+//	// you can loop k higher to see more color choices
+//	for (k = 1; k < 16; k++)
+//	{
+//		// pick the colorattribute k you want
+//		SetConsoleTextAttribute(hConsole, k);
+//		cout << k << " I want to be nice today!" << endl;
+//	}
+//
+//	system("pause");
+//	return 0;
+//}
+
+
+
+// Microsoft Development Environment 2003 - Version 7.1.3088
+// Copyright (r) 1987-2002 Microsoft Corporation. All Right Reserved
+// Microsoft .NET Framework 1.1 - Version 1.1.4322
+// Copyright (r) 1998-2002 Microsoft Corporation. All Right Reserved
+//
+// Run on Windows XP Pro machine, version 2002, SP 2
+//
+// <windows.h> already included...
+// WINVER = 0x0501 for Xp already defined in windows.h
+
+/*
+	Simple udp client
+*/
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+
+#include <stdio.h>
+#include <winsock2.h>
 #include <iostream>
-#include <windows.h>   // WinApi header
+#include <thread>
 
-using namespace std;    // std::cout, std::cin
+#pragma comment(lib,"ws2_32.lib") //Winsock Library
 
-int main()
+#define SERVER "95.81.75.8"  //ip address of udp server
+#define BUFLEN 512  //Max length of buffer
+#define PORT 58326   //The port on which to listen for incoming data
+
+
+int main(void)
 {
-	HANDLE  hConsole;
-	int k;
+	//std::thread t = std::thread(receive);
 
-	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	cout << 0 << " I want to be nice today!" << endl;
+	struct sockaddr_in si_other;
+	int s, slen = sizeof(si_other);
+	char buf[BUFLEN];
+	char message[BUFLEN];
+	WSADATA wsa;
 
-	// you can loop k higher to see more color choices
-	for (k = 1; k < 16; k++)
+	//Initialise winsock
+	printf("\nInitialising Winsock...");
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
-		// pick the colorattribute k you want
-		SetConsoleTextAttribute(hConsole, k);
-		cout << k << " I want to be nice today!" << endl;
+		printf("Failed. Error Code : %d", WSAGetLastError());
+		system("pause");
+		return 0;
+	}
+	printf("Initialised.\n");
+
+	//create socket
+	if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_ERROR)
+	{
+		printf("socket() failed with error code : %d", WSAGetLastError());
+		system("pause");
+		return 0;
 	}
 
+	//setup address structure
+	memset((char *)&si_other, 0, sizeof(si_other));
+	si_other.sin_family = AF_INET;
+	si_other.sin_port = htons(PORT);
+	si_other.sin_addr.S_un.S_addr = inet_addr(SERVER);
+
+
+
+
+	//start communication
+	while (1)
+	{
+	printf("Enter message : ");
+	std::cin >> message;
+
+	//send the message
+	if (sendto(s, message, strlen(message), 0, (struct sockaddr *) &si_other, slen) == SOCKET_ERROR)
+	{
+		printf("sendto() failed with error code : %d", WSAGetLastError());
+		system("pause");
+		return 0;
+	}
+
+	//receive a reply and print it
+	//clear the buffer by filling null, it might have previously received data
+	memset(buf, '\0', BUFLEN);
+	//try to receive some data, this is a blocking call
+	if (recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen) == SOCKET_ERROR)
+	{
+		printf("recvfrom() failed with error code : %d", WSAGetLastError());
+		exit(EXIT_FAILURE);
+	}
+
+	puts(buf);
+	}
+
+	int i = 0;
+
+
+	closesocket(s);
+	WSACleanup();
 	system("pause");
 	return 0;
 }
